@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role', // Allows mass assignment of role
     ];
 
     /**
@@ -34,7 +34,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -44,5 +44,39 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relationships
+
+    /**
+     * Get the wallet associated with the user (driver).
+     */
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    /**
+     * Get the driver profile associated with the user (driver).
+     */
+    public function driverProfile()
+    {
+        return $this->hasOne(DriverProfile::class);
+    }
+
+    /**
+     * Get rides where the user is a rider.
+     */
+    public function ridesAsRider()
+    {
+        return $this->hasMany(Ride::class, 'rider_id');
+    }
+
+    /**
+     * Get rides where the user is a driver.
+     */
+    public function ridesAsDriver()
+    {
+        return $this->hasMany(Ride::class, 'driver_id');
     }
 }
