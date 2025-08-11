@@ -11,13 +11,12 @@ return new class extends Migration
         Schema::create('rides', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rider_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('driver_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->string('pickup_location');
             $table->string('dropoff_location');
             $table->decimal('fare', 10, 2);
-            $table->enum('status', ['pending', 'accepted', 'ongoing', 'completed', 'cancelled'])->default('pending');
-            $table->timestamp('pickup_time')->nullable();
-            $table->timestamp('dropoff_time')->nullable();
+            $table->enum('status', ['pending', 'accepted', 'completed', 'cancelled'])->default('completed');
+            $table->timestamp('ride_date')->nullable();
             $table->timestamps();
         });
     }

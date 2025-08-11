@@ -2,54 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role', // Allows mass assignment of role
+        'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-
-    // Relationships
-
-    /**
-     * Get the wallet associated with the user (driver).
+     * User has one wallet
      */
     public function wallet()
     {
@@ -57,26 +31,34 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the driver profile associated with the user (driver).
+     * User has many rides as driver
      */
-    public function driverProfile()
+    public function driverRides()
     {
-        return $this->hasOne(DriverProfile::class);
+        return $this->hasMany(Ride::class, 'driver_id');
     }
 
     /**
-     * Get rides where the user is a rider.
+     * User has many rides as rider
      */
-    public function ridesAsRider()
+    public function riderRides()
     {
         return $this->hasMany(Ride::class, 'rider_id');
     }
 
     /**
-     * Get rides where the user is a driver.
+     * Driver wallet transactions
      */
-    public function ridesAsDriver()
+    public function driverWalletTransactions()
     {
-        return $this->hasMany(Ride::class, 'driver_id');
+        return $this->hasMany(DriverWalletTransaction::class, 'driver_id');
+    }
+
+    /**
+     * Driver profile
+     */
+    public function driverProfile()
+    {
+        return $this->hasOne(DriverProfile::class, 'driver_id');
     }
 }

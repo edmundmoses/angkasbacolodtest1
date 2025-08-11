@@ -11,13 +11,25 @@ class DriverWalletTransaction extends Model
 
     protected $fillable = [
         'wallet_id',
+        'driver_id',
         'type',
         'amount',
         'description',
     ];
 
+    /**
+     * Each transaction belongs to a wallet.
+     */
     public function wallet()
     {
         return $this->belongsTo(Wallet::class);
+    }
+
+    /**
+     * Each transaction is linked to a driver (user).
+     */
+    public function driver()
+    {
+        return $this->belongsTo(User::class, 'driver_id');
     }
 }

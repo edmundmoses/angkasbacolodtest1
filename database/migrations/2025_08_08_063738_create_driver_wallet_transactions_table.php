@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('driver_wallet_transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('wallet_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['credit', 'debit']);
             $table->decimal('amount', 10, 2);

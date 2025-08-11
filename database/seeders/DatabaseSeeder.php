@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             InitialDataSeeder::class,
+            RideSeeder::class,
         ]);
     }
 }
